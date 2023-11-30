@@ -14,6 +14,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
 public class TokenToAdminUserMethodArgumentResolver implements HandlerMethodArgumentResolver {
+
     @Autowired
     private NewBeeAdminUserTokenMapper newBeeAdminUserTokenMapper;
 

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 
-
 /**
  * 全局异常处理
  */
@@ -36,10 +35,11 @@ public class AdminUserServiceExceptionHandler {
         return result;
     }
 
+    @ExceptionHandler(Exception.class)
     public Object handleException(Exception e, HttpServletRequest req) {
         Result result = new Result();
         result.setResultCode(500);
-        // 区分是否为自定义异常
+        //区分是否为自定义异常
         if (e instanceof NewBeeMallException) {
             result.setMessage(e.getMessage());
             if (e.getMessage().equals("ADMIN_NOT_LOGIN_ERROR") || e.getMessage().equals("ADMIN_TOKEN_EXPIRE_ERROR")) {
@@ -50,5 +50,6 @@ public class AdminUserServiceExceptionHandler {
             result.setMessage("未知异常，请查看控制台日志并检查配置文件。");
         }
         return result;
+
     }
 }

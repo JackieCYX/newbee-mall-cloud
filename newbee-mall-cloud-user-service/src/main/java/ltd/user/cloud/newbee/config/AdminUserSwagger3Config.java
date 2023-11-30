@@ -1,5 +1,6 @@
 package ltd.user.cloud.newbee.config;
 
+import ltd.user.cloud.newbee.entity.AdminUserToken;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -13,14 +14,13 @@ import springfox.documentation.service.ParameterType;
 import springfox.documentation.service.RequestParameter;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
-import ltd.user.cloud.newbee.entity.AdminUserToken;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
 @EnableOpenApi
-public class AdminUserSwagger3Config {
+public class AdminUserSwagger3Config{
 
     @Bean
     public Docket api() {
@@ -34,14 +34,14 @@ public class AdminUserSwagger3Config {
                 .globalRequestParameters(getGlobalRequestParameters());
     }
 
-    // 生成全局通用函数
+    //生成全局通用参数
     private List<RequestParameter> getGlobalRequestParameters() {
         List<RequestParameter> parameters = new ArrayList<>();
         parameters.add(new RequestParameterBuilder()
                 .name("token")
                 .description("登录认证token")
-                .required(false)
-                .in(ParameterType.HEADER) // 请求头中的参数，其它类型可以点进ParameterType类中查看
+                .required(false) // 非必传
+                .in(ParameterType.HEADER) //请求头中的参数，其它类型可以点进ParameterType类中查看
                 .query(q -> q.model(m -> m.scalarModel(ScalarType.STRING)))
                 .build());
         return parameters;

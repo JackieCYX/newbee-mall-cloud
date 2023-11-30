@@ -13,4 +13,5 @@ public @interface TokenToAdminUser {
      * @return
      */
     String value() default "adminUser";
+
 }
