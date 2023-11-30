@@ -5,6 +5,10 @@ import org.apache.ibatis.annotations.Param;
 
 public interface AdminUserMapper {
 
+    int insert(AdminUser record);
+
+    int insertSelective(AdminUser record);
+
     /**
      * 登陆方法
      *
@@ -13,4 +17,10 @@ public interface AdminUserMapper {
      * @return
      */
     AdminUser login(@Param("userName") String userName, @Param("password") String password);
+
+    AdminUser selectByPrimaryKey(Long adminUserId);
+
+    int updateByPrimaryKeySelective(AdminUser record);
+
+    int updateByPrimaryKey(AdminUser record);
 }

@@ -67,4 +67,48 @@ public class AdminUserServiceImpl implements AdminUserService {
         String src = timeStr + userId + NumberUtil.genRandomNum(6);
         return SystemUtil.genToken(src);
     }
+
+    @Override
+    public AdminUser getUserDetailById(Long loginUserId) {
+        return adminUserMapper.selectByPrimaryKey(loginUserId);
+    }
+
+    @Override
+    public Boolean updatePassword(Long loginUserId, String originalPassword, String newPassword) {
+        AdminUser adminUser = adminUserMapper.selectByPrimaryKey(loginUserId);
+        // 当前用户非空才可以进行更改
+        if (adminUser != null) {
+            // 比较原密码是否正确
+            if (originalPassword.equals(adminUser.getLoginPassword())) {
+                // 设置新密码并修改
+                adminUser.setLoginPassword(newPassword);
+                if (adminUserMapper.updateByPrimaryKeySelective(adminUser) > 0 && newBeeAdminUserTokenMapper.deleteByPrimaryKey(loginUserId) > 0) {
+                    // 修改成功且清空当前token则返回true
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean updateName(Long loginUserId, String loginUserName, String nickName) {
+        AdminUser adminUser = adminUserMapper.selectByPrimaryKey(loginUserId);
+        //当前用户非空才可以进行更改
+        if (adminUser != null) {
+            //设置新名称并修改
+            adminUser.setLoginUserName(loginUserName);
+            adminUser.setNickName(nickName);
+            if (adminUserMapper.updateByPrimaryKeySelective(adminUser) > 0) {
+                //修改成功则返回true
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean logout(Long adminUserId) {
+        return newBeeAdminUserTokenMapper.deleteByPrimaryKey(adminUserId) > 0;
+    }
 }
