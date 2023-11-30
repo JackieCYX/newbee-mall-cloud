@@ -1,0 +1,18 @@
+server:
+  port: 29000
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
+
+spring:
+  application:
+    # ????
+    name: newbee-mall-cloud-user-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        username: nacos
+        password: nacos

@@ -1,0 +1,27 @@
+server:
+  port: 29100
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
+spring:
+  application:
+    name: newbee-mall-cloud-gateway-admin
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        username: nacos
+        password: nacos
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: user-service-route
+          uri: lb://newbee-mall-cloud-user-service
+          order: 1
+          predicates:
+            - Path=/users/admin/**
