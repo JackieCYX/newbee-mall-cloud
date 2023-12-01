@@ -1,5 +1,7 @@
 package ltd.user.cloud.newbee.controller;
 
+import ltd.common.cloud.newbee.dto.Result;
+import ltd.common.cloud.newbee.dto.ResultGenerator;
 import ltd.user.cloud.newbee.config.annotation.TokenToAdminUser;
 import ltd.user.cloud.newbee.controller.param.AdminLoginParam;
 import ltd.user.cloud.newbee.controller.param.UpdateAdminNameParam;
@@ -7,8 +9,7 @@ import ltd.user.cloud.newbee.controller.param.UpdateAdminPasswordParam;
 import ltd.user.cloud.newbee.entity.AdminUser;
 import ltd.user.cloud.newbee.entity.AdminUserToken;
 import ltd.user.cloud.newbee.service.AdminUserService;
-import ltd.user.cloud.newbee.util.Result;
-import ltd.user.cloud.newbee.util.ResultGenerator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;

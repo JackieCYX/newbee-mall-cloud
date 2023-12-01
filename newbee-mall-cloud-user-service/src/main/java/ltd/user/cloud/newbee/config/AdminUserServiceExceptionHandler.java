@@ -1,7 +1,8 @@
 package ltd.user.cloud.newbee.config;
 
-import ltd.user.cloud.newbee.util.NewBeeMallException;
-import ltd.user.cloud.newbee.util.Result;
+
+import ltd.common.cloud.newbee.dto.Result;
+import ltd.common.cloud.newbee.exception.NewBeeMallException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;

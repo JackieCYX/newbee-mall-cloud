@@ -12,6 +12,7 @@
     <modules>
         <module>newbee-mall-cloud-user-service</module>
         <module>newbee-mall-cloud-gateway-admin</module>
+        <module>newbee-mall-cloud-common</module>
     </modules>
 
     <properties>

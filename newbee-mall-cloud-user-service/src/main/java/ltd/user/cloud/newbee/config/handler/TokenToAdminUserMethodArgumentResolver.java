@@ -3,7 +3,7 @@ package ltd.user.cloud.newbee.config.handler;
 import ltd.user.cloud.newbee.config.annotation.TokenToAdminUser;
 import ltd.user.cloud.newbee.dao.NewBeeAdminUserTokenMapper;
 import ltd.user.cloud.newbee.entity.AdminUserToken;
-import ltd.user.cloud.newbee.util.NewBeeMallException;
+import ltd.common.cloud.newbee.exception.NewBeeMallException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;

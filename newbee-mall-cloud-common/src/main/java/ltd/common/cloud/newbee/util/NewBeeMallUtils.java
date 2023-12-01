@@ -1,4 +1,4 @@
-package ltd.user.cloud.newbee.util;
+package ltd.common.cloud.newbee.util;
 
 import org.springframework.util.StringUtils;
 

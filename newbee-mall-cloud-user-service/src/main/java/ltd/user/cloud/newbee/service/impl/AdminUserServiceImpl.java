@@ -1,12 +1,13 @@
 package ltd.user.cloud.newbee.service.impl;
 
+import ltd.common.cloud.newbee.util.NumberUtil;
+import ltd.common.cloud.newbee.util.SystemUtil;
 import ltd.user.cloud.newbee.dao.AdminUserMapper;
 import ltd.user.cloud.newbee.dao.NewBeeAdminUserTokenMapper;
 import ltd.user.cloud.newbee.entity.AdminUser;
 import ltd.user.cloud.newbee.entity.AdminUserToken;
 import ltd.user.cloud.newbee.service.AdminUserService;
-import ltd.user.cloud.newbee.util.NumberUtil;
-import ltd.user.cloud.newbee.util.SystemUtil;
+
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
