@@ -7,7 +7,7 @@ import ltd.user.cloud.newbee.controller.param.AdminLoginParam;
 import ltd.user.cloud.newbee.controller.param.UpdateAdminNameParam;
 import ltd.user.cloud.newbee.controller.param.UpdateAdminPasswordParam;
 import ltd.user.cloud.newbee.entity.AdminUser;
-import ltd.user.cloud.newbee.entity.AdminUserToken;
+import ltd.common.cloud.newbee.pojo.AdminUserToken;
 import ltd.user.cloud.newbee.service.AdminUserService;
 
 import org.slf4j.Logger;
@@ -86,7 +86,7 @@ public class NewBeeMallCloudAdminUserController {
     @DeleteMapping("/users/admin/logout")
     public Result logout(@TokenToAdminUser AdminUserToken adminUser) {
         logger.info("adminUser:{}", adminUser.toString());
-        adminUserService.logout(adminUser.getAdminUserId());
+        adminUserService.logout(adminUser.getToken());
         return ResultGenerator.genSuccessResult();
     }
 

@@ -42,10 +42,10 @@ public interface AdminUserService {
 
     /**
      * 登出接口
-     * @param adminUserId
+     * @param token
      * @return
      */
-    Boolean logout(Long adminUserId);
+    Boolean logout(String token);
 
     /**
      * 获取用户信息by token

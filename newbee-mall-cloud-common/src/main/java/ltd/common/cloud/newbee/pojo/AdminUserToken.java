@@ -1,11 +1,12 @@
-package ltd.user.cloud.newbee.entity;
+package ltd.common.cloud.newbee.pojo;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
-public class AdminUserToken {
+public class AdminUserToken implements Serializable {
     private Long adminUserId;
 
     private String token;

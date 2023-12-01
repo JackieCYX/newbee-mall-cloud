@@ -1,6 +1,6 @@
 package ltd.user.cloud.newbee.config;
 
-import ltd.user.cloud.newbee.entity.AdminUserToken;
+import ltd.common.cloud.newbee.pojo.AdminUserToken;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
