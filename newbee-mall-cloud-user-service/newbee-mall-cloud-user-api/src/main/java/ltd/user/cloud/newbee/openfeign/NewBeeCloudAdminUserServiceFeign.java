@@ -1,5 +1,6 @@
 package ltd.user.cloud.newbee.openfeign;
 
+import ltd.common.cloud.newbee.dto.Result;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,5 +9,5 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface NewBeeCloudAdminUserServiceFeign {
 
     @GetMapping(value = "/admin/{token}")
-    String getAdminUserByToken(@PathVariable(value = "token") String token);
+    Result getAdminUserByToken(@PathVariable(value = "token") String token);
 }
