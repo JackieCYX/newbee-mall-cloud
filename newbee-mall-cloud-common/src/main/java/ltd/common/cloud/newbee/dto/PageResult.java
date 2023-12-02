@@ -32,11 +32,11 @@ public class PageResult<T> implements Serializable {
      * @param pageSize   每页记录数
      * @param currPage   当前页数
      */
-    public PageResult(int totalCount, int pageSize, int currPage, List<T> list) {
+    public PageResult(List<T> list, int totalCount, int pageSize, int currPage) {
+        this.list = list;
         this.totalCount = totalCount;
         this.pageSize = pageSize;
         this.currPage = currPage;
-        this.list = list;
         this.totalPage = (int) Math.ceil((double) totalCount / pageSize);
     }
 }
