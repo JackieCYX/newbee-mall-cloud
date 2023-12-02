@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>ltd.newbee.cloud</groupId>
+    <groupId>ltd.user.newbee.cloud</groupId>
     <artifactId>newbee-mall-cloud-goods-web</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>newbee-mall-cloud-goods-web</name>
@@ -67,5 +67,17 @@
             <artifactId>newbee-mall-cloud-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>ltd.user.newbee.cloud</groupId>
+            <artifactId>newbee-mall-cloud-user-api</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 </project>

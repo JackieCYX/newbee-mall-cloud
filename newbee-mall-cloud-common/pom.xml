@@ -5,6 +5,7 @@
     <groupId>ltd.newbee.cloud</groupId>
     <artifactId>newbee-mall-cloud-common</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
     <name>newbee-mall-cloud-common</name>
     <description>公共模块</description>
 
