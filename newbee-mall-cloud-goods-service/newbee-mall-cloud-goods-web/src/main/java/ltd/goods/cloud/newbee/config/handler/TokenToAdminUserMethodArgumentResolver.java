@@ -1,8 +1,12 @@
 package ltd.goods.cloud.newbee.config.handler;
 
+import ltd.common.cloud.newbee.dto.Result;
 import ltd.goods.cloud.newbee.config.annotation.TokenToAdminUser;
 import ltd.common.cloud.newbee.pojo.AdminUserToken;
 import ltd.common.cloud.newbee.exception.NewBeeMallException;
+import ltd.goods.cloud.newbee.entity.LoginAdminUser;
+import ltd.user.cloud.newbee.openfeign.NewBeeCloudAdminUserServiceFeign;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -10,9 +14,13 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import java.util.LinkedHashMap;
+
 @Component
 public class TokenToAdminUserMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
+    @Autowired
+    private NewBeeCloudAdminUserServiceFeign newBeeCloudAdminUserService;
     public TokenToAdminUserMethodArgumentResolver() {
     }
 
@@ -27,11 +35,22 @@ public class TokenToAdminUserMethodArgumentResolver implements HandlerMethodArgu
         if (parameter.getParameterAnnotation(TokenToAdminUser.class) instanceof TokenToAdminUser) {
             String token = webRequest.getHeader("token");
             if (null != token && !"".equals(token) && token.length() == 32) {
-                AdminUserToken adminUserToken = null;
-                if (adminUserToken == null) {
+                // 通过用户中心获取用户信息
+                Result result = newBeeCloudAdminUserService.getAdminUserByToken(token);
+
+                if (result == null || result.getResultCode() != 200 || result.getData() == null) {
                     NewBeeMallException.fail("ADMIN_NOT_LOGIN_ERROR");
                 }
-                return adminUserToken;
+
+                LinkedHashMap resultData = (LinkedHashMap) result.getData();
+
+                // 将返回的字段封装到
+                LoginAdminUser loginAdminUser = new LoginAdminUser();
+                loginAdminUser.setAdminUserId(Long.valueOf(resultData.get("adminUserId").toString()));
+                loginAdminUser.setLoginUserName((String) resultData.get("loginUserName"));
+                loginAdminUser.setNickName((String) resultData.get("nickName"));
+                loginAdminUser.setLocked(Byte.valueOf(resultData.get("locked").toString()));
+                return loginAdminUser;
             } else {
                 NewBeeMallException.fail("ADMIN_NOT_LOGIN_ERROR");
             }

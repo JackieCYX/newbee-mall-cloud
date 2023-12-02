@@ -5,6 +5,8 @@ spring:
   application:
     # ????
     name: newbee-mall-cloud-goods-service
+  main:
+    allow-circular-references: true
   datasource:
     name: newbee-mall-cloud-goods-datasource
     driver-class-name: com.mysql.cj.jdbc.Driver

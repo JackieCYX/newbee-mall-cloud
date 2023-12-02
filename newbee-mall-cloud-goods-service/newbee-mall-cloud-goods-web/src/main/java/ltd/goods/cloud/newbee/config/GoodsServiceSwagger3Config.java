@@ -28,7 +28,7 @@ public class GoodsServiceSwagger3Config {
                 .apiInfo(apiInfo())
                 .ignoredParameterTypes(AdminUserToken.class)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("ltd.user.cloud.newbee.controller"))
+                .apis(RequestHandlerSelectors.basePackage("ltd.goods.cloud.newbee.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .globalRequestParameters(getGlobalRequestParameters());
@@ -49,7 +49,7 @@ public class GoodsServiceSwagger3Config {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("newbee-mall-cloud-user-service接口文档")
+                .title("newbee-mall-cloud-goods-service接口文档")
                 .description("swagger接口文档")
                 .version("2.0")
                 .build();
