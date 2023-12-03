@@ -50,8 +50,9 @@ mybatis:
 feign:
   client:
     config:
-      connectTimeout: 2000
-      readTimeout: 5000
+      default:
+        connectTimeout: 2000
+        readTimeout: 5000
   compression:
     request:
       enabled: true

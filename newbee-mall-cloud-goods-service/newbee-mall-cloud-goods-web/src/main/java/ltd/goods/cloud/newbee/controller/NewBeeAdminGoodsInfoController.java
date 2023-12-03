@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@Api(value = "v1", tags = "后台管理系统分类模块接口")
+@Api(value = "v1", tags = "后台管理系统商品模块接口")
 @RequestMapping("/goods/admin")
 public class NewBeeAdminGoodsInfoController {
 
@@ -39,7 +39,7 @@ public class NewBeeAdminGoodsInfoController {
     @Resource
     private NewBeeMallCategoryService newBeeMallCategoryService;
 
-    @GetMapping("/list")
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ApiOperation(value = "商品列表", notes = "可根据名称和上架状态筛选")
     public Result list(@RequestParam(required = false) @ApiParam(value = "页码") Integer pageNumber,
                        @RequestParam(required = false) @ApiParam(value = "每页条数") Integer pageSize,
@@ -62,7 +62,7 @@ public class NewBeeAdminGoodsInfoController {
         return ResultGenerator.genSuccessResult(newBeeMallGoodsService.getNewBeeMallGoodsPage(pageUtil));
     }
 
-    @PostMapping("/add")
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ApiOperation(value = "新增商品信息", notes = "新增商品信息")
     public Result save(@RequestBody @Valid GoodsAddParam goodsAddParam, @TokenToAdminUser LoginAdminUser adminUser) {
         logger.info("adminUser:{}", adminUser.toString());
@@ -76,7 +76,7 @@ public class NewBeeAdminGoodsInfoController {
         }
     }
 
-    @PutMapping("/update")
+    @RequestMapping(value = "/update", method = RequestMethod.PUT)
     @ApiOperation(value = "修改商品信息", notes = "修改商品信息")
     public Result update(@RequestBody @Valid GoodsEditParam goodsEditParam, @TokenToAdminUser LoginAdminUser adminUser) {
         logger.info("adminUser:{}", adminUser.toString());
@@ -118,10 +118,9 @@ public class NewBeeAdminGoodsInfoController {
         return ResultGenerator.genSuccessResult(goodsInfo);
     }
 
-    @PutMapping("/updateStatus/{sellStatus}")
+    @RequestMapping(value = "/updateStatus/{sellStatus}", method = RequestMethod.PUT)
     @ApiOperation(value = "批量修改销售状态", notes = "批量修改销售状态")
-    public Result delete(@RequestBody BatchIdParam batchIdParam, @PathVariable("sellStatus") int sellStatus,
-                         @TokenToAdminUser LoginAdminUser adminUser) {
+    public Result delete(@RequestBody BatchIdParam batchIdParam, @PathVariable("sellStatus") int sellStatus, @TokenToAdminUser LoginAdminUser adminUser) {
         logger.info("adminUser:{}", adminUser.toString());
         if (batchIdParam == null || batchIdParam.getIds().length < 1) {
             return ResultGenerator.genFailResult("参数异常！");
@@ -142,4 +141,5 @@ public class NewBeeAdminGoodsInfoController {
         NewBeeMallGoods goods = newBeeMallGoodsService.getNewBeeMallGoodsById(goodsId);
         return ResultGenerator.genSuccessResult(goods);
     }
+
 }

@@ -30,7 +30,7 @@ import java.util.Map;
 
 @RestController
 @Api(value = "v1", tags = "后台管理系统分类模块接口")
-@RequestMapping("/goods/admin")
+@RequestMapping("/categories/admin")
 public class NewBeeAdminGoodsCategoryController {
 
     private static final Logger logger = LoggerFactory.getLogger(NewBeeAdminGoodsCategoryController.class);
@@ -38,17 +38,7 @@ public class NewBeeAdminGoodsCategoryController {
     @Resource
     private NewBeeMallCategoryService newBeeMallCategoryService;
 
-    /**
-     * 列表
-     *
-     * @param pageNumber
-     * @param pageSize
-     * @param categoryLevel
-     * @param parentId
-     * @param adminUser
-     * @return
-     */
-    @GetMapping("/list")
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ApiOperation(value = "商品分类列表", notes = "根据级别和上级分类id查询")
     public Result list(@RequestParam(required = false) @ApiParam(value = "页码") Integer pageNumber,
                        @RequestParam(required = false) @ApiParam(value = "每页条数") Integer pageSize,
@@ -67,14 +57,7 @@ public class NewBeeAdminGoodsCategoryController {
         return ResultGenerator.genSuccessResult(newBeeMallCategoryService.getCategorisPage(pageUtil));
     }
 
-    /**
-     * 列表
-     *
-     * @param categoryId
-     * @param adminUser
-     * @return
-     */
-    @GetMapping("/list4Select")
+    @RequestMapping(value = "/list4Select", method = RequestMethod.GET)
     @ApiOperation(value = "商品分类列表", notes = "用于三级分类联动效果制作")
     public Result listForSelect(@RequestParam("categoryId") Long categoryId, @TokenToAdminUser LoginAdminUser adminUser) {
         logger.info("adminUser:{}", adminUser.toString());
@@ -82,7 +65,7 @@ public class NewBeeAdminGoodsCategoryController {
             return ResultGenerator.genFailResult("缺少参数！");
         }
         GoodsCategory category = newBeeMallCategoryService.getGoodsCategoryById(categoryId);
-        // 既不是一级分类也不是二级分类则为不返回数据
+        //既不是一级分类也不是二级分类则为不返回数据
         if (category == null || category.getCategoryLevel() == NewBeeMallCategoryLevelEnum.LEVEL_THREE.getLevel()) {
             return ResultGenerator.genFailResult("参数异常！");
         }
@@ -90,58 +73,39 @@ public class NewBeeAdminGoodsCategoryController {
         if (category.getCategoryLevel() == NewBeeMallCategoryLevelEnum.LEVEL_ONE.getLevel()) {
             //如果是一级分类则返回当前一级分类下的所有二级分类，以及二级分类列表中第一条数据下的所有三级分类列表
             //查询一级分类列表中第一个实体的所有二级分类
-            List<GoodsCategory> secondLevelCategories = newBeeMallCategoryService
-                    .selectByLevelAndParentIdsAndNumber(Collections.singletonList(categoryId), NewBeeMallCategoryLevelEnum.LEVEL_TWO.getLevel());
+            List<GoodsCategory> secondLevelCategories = newBeeMallCategoryService.selectByLevelAndParentIdsAndNumber(Collections.singletonList(categoryId), NewBeeMallCategoryLevelEnum.LEVEL_TWO.getLevel());
             if (!CollectionUtils.isEmpty(secondLevelCategories)) {
-                // 查询二级分类列表中第一个实体的所有三级分类
-                List<GoodsCategory> thirdLevelCategories = newBeeMallCategoryService
-                        .selectByLevelAndParentIdsAndNumber(Collections.singletonList(secondLevelCategories.get(0).getCategoryId()), NewBeeMallCategoryLevelEnum.LEVEL_THREE.getLevel());
+                //查询二级分类列表中第一个实体的所有三级分类
+                List<GoodsCategory> thirdLevelCategories = newBeeMallCategoryService.selectByLevelAndParentIdsAndNumber(Collections.singletonList(secondLevelCategories.get(0).getCategoryId()), NewBeeMallCategoryLevelEnum.LEVEL_THREE.getLevel());
                 categoryResult.put("secondLevelCategories", secondLevelCategories);
                 categoryResult.put("thirdLevelCategories", thirdLevelCategories);
             }
         }
         if (category.getCategoryLevel() == NewBeeMallCategoryLevelEnum.LEVEL_TWO.getLevel()) {
             //如果是二级分类则返回当前分类下的所有三级分类列表
-            List<GoodsCategory> thirdLevelCategories = newBeeMallCategoryService
-                    .selectByLevelAndParentIdsAndNumber(Collections.singletonList(categoryId), NewBeeMallCategoryLevelEnum.LEVEL_THREE.getLevel());
+            List<GoodsCategory> thirdLevelCategories = newBeeMallCategoryService.selectByLevelAndParentIdsAndNumber(Collections.singletonList(categoryId), NewBeeMallCategoryLevelEnum.LEVEL_THREE.getLevel());
             categoryResult.put("thirdLevelCategories", thirdLevelCategories);
         }
         return ResultGenerator.genSuccessResult(categoryResult);
     }
 
-    /**
-     * 添加
-     *
-     * @param goodsCategoryAddParam
-     * @param adminUser
-     * @return
-     */
-    @PostMapping("/add")
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ApiOperation(value = "新增分类", notes = "新增分类")
-    public Result save(@RequestBody @Valid GoodsCategoryAddParam goodsCategoryAddParam,
-                       @TokenToAdminUser LoginAdminUser adminUser) {
+    public Result save(@RequestBody @Valid GoodsCategoryAddParam goodsCategoryAddParam, @TokenToAdminUser LoginAdminUser adminUser) {
         logger.info("adminUser:{}", adminUser.toString());
         GoodsCategory goodsCategory = new GoodsCategory();
         BeanUtil.copyProperties(goodsCategoryAddParam, goodsCategory);
         String result = newBeeMallCategoryService.saveCategory(goodsCategory);
-        if (ServiceResultEnum.SUCCESS.getResult().equals(result)){
+        if (ServiceResultEnum.SUCCESS.getResult().equals(result)) {
             return ResultGenerator.genSuccessResult();
         } else {
             return ResultGenerator.genFailResult(result);
         }
     }
 
-    /**
-     * 修改
-     *
-     * @param goodsCategoryEditParam
-     * @param adminUser
-     * @return
-     */
-    @PutMapping("update")
+    @RequestMapping(value = "/update", method = RequestMethod.PUT)
     @ApiOperation(value = "修改分类信息", notes = "修改分类信息")
-    public Result update(@RequestBody @Valid GoodsCategoryEditParam goodsCategoryEditParam,
-                         @TokenToAdminUser LoginAdminUser adminUser) {
+    public Result update(@RequestBody @Valid GoodsCategoryEditParam goodsCategoryEditParam, @TokenToAdminUser LoginAdminUser adminUser) {
         logger.info("adminUser:{}", adminUser.toString());
         GoodsCategory goodsCategory = new GoodsCategory();
         BeanUtil.copyProperties(goodsCategoryEditParam, goodsCategory);
@@ -153,14 +117,7 @@ public class NewBeeAdminGoodsCategoryController {
         }
     }
 
-    /**
-     * 查询详情
-     *
-     * @param id
-     * @param adminUser
-     * @return
-     */
-    @GetMapping("/detail/{id}")
+    @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET)
     @ApiOperation(value = "获取单条分类信息", notes = "根据id查询")
     public Result info(@PathVariable("id") Long id, @TokenToAdminUser LoginAdminUser adminUser) {
         logger.info("adminUser:{}", adminUser.toString());
@@ -171,7 +128,8 @@ public class NewBeeAdminGoodsCategoryController {
         return ResultGenerator.genSuccessResult(goodsCategory);
     }
 
-    @DeleteMapping("/batchDelete")
+    @RequestMapping(value = "/batchDelete", method = RequestMethod.DELETE)
+    @ApiOperation(value = "批量删除分类信息", notes = "批量删除分类信息")
     public Result delete(@RequestBody BatchIdParam batchIdParam, @TokenToAdminUser LoginAdminUser adminUser) {
         logger.info("adminUser:{}", adminUser.toString());
         if (batchIdParam == null || batchIdParam.getIds().length < 1) {
