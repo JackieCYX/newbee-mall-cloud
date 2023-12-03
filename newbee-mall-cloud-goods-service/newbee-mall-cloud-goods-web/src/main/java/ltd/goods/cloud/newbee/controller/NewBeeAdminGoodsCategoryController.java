@@ -7,19 +7,22 @@ import ltd.common.cloud.newbee.dto.PageQueryUtil;
 import ltd.common.cloud.newbee.dto.Result;
 import ltd.common.cloud.newbee.dto.ResultGenerator;
 import ltd.common.cloud.newbee.enums.NewBeeMallCategoryLevelEnum;
+import ltd.common.cloud.newbee.enums.ServiceResultEnum;
+import ltd.common.cloud.newbee.util.BeanUtil;
 import ltd.goods.cloud.newbee.config.annotation.TokenToAdminUser;
+import ltd.goods.cloud.newbee.controller.param.BatchIdParam;
+import ltd.goods.cloud.newbee.controller.param.GoodsCategoryAddParam;
+import ltd.goods.cloud.newbee.controller.param.GoodsCategoryEditParam;
 import ltd.goods.cloud.newbee.entity.GoodsCategory;
 import ltd.goods.cloud.newbee.entity.LoginAdminUser;
 import ltd.goods.cloud.newbee.service.NewBeeMallCategoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -64,6 +67,13 @@ public class NewBeeAdminGoodsCategoryController {
         return ResultGenerator.genSuccessResult(newBeeMallCategoryService.getCategorisPage(pageUtil));
     }
 
+    /**
+     * 列表
+     *
+     * @param categoryId
+     * @param adminUser
+     * @return
+     */
     @GetMapping("/list4Select")
     @ApiOperation(value = "商品分类列表", notes = "用于三级分类联动效果制作")
     public Result listForSelect(@RequestParam("categoryId") Long categoryId, @TokenToAdminUser LoginAdminUser adminUser) {
@@ -97,5 +107,80 @@ public class NewBeeAdminGoodsCategoryController {
             categoryResult.put("thirdLevelCategories", thirdLevelCategories);
         }
         return ResultGenerator.genSuccessResult(categoryResult);
+    }
+
+    /**
+     * 添加
+     *
+     * @param goodsCategoryAddParam
+     * @param adminUser
+     * @return
+     */
+    @PostMapping("/add")
+    @ApiOperation(value = "新增分类", notes = "新增分类")
+    public Result save(@RequestBody @Valid GoodsCategoryAddParam goodsCategoryAddParam,
+                       @TokenToAdminUser LoginAdminUser adminUser) {
+        logger.info("adminUser:{}", adminUser.toString());
+        GoodsCategory goodsCategory = new GoodsCategory();
+        BeanUtil.copyProperties(goodsCategoryAddParam, goodsCategory);
+        String result = newBeeMallCategoryService.saveCategory(goodsCategory);
+        if (ServiceResultEnum.SUCCESS.getResult().equals(result)){
+            return ResultGenerator.genSuccessResult();
+        } else {
+            return ResultGenerator.genFailResult(result);
+        }
+    }
+
+    /**
+     * 修改
+     *
+     * @param goodsCategoryEditParam
+     * @param adminUser
+     * @return
+     */
+    @PutMapping("update")
+    @ApiOperation(value = "修改分类信息", notes = "修改分类信息")
+    public Result update(@RequestBody @Valid GoodsCategoryEditParam goodsCategoryEditParam,
+                         @TokenToAdminUser LoginAdminUser adminUser) {
+        logger.info("adminUser:{}", adminUser.toString());
+        GoodsCategory goodsCategory = new GoodsCategory();
+        BeanUtil.copyProperties(goodsCategoryEditParam, goodsCategory);
+        String result = newBeeMallCategoryService.updateGoodsCategory(goodsCategory);
+        if (ServiceResultEnum.SUCCESS.getResult().equals(result)) {
+            return ResultGenerator.genSuccessResult();
+        } else {
+            return ResultGenerator.genFailResult(result);
+        }
+    }
+
+    /**
+     * 查询详情
+     *
+     * @param id
+     * @param adminUser
+     * @return
+     */
+    @GetMapping("/detail/{id}")
+    @ApiOperation(value = "获取单条分类信息", notes = "根据id查询")
+    public Result info(@PathVariable("id") Long id, @TokenToAdminUser LoginAdminUser adminUser) {
+        logger.info("adminUser:{}", adminUser.toString());
+        GoodsCategory goodsCategory = newBeeMallCategoryService.getGoodsCategoryById(id);
+        if (goodsCategory == null) {
+            return ResultGenerator.genFailResult("未查询到数据");
+        }
+        return ResultGenerator.genSuccessResult(goodsCategory);
+    }
+
+    @DeleteMapping("/batchDelete")
+    public Result delete(@RequestBody BatchIdParam batchIdParam, @TokenToAdminUser LoginAdminUser adminUser) {
+        logger.info("adminUser:{}", adminUser.toString());
+        if (batchIdParam == null || batchIdParam.getIds().length < 1) {
+            return ResultGenerator.genFailResult("参数异常！");
+        }
+        if (newBeeMallCategoryService.deleteBatch(batchIdParam.getIds())) {
+            return ResultGenerator.genSuccessResult();
+        } else {
+            return ResultGenerator.genFailResult("删除失败");
+        }
     }
 }

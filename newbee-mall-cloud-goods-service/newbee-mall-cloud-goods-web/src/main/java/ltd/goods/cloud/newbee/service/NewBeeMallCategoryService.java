@@ -26,4 +26,10 @@ public interface NewBeeMallCategoryService {
      * @return
      */
     List<GoodsCategory> selectByLevelAndParentIdsAndNumber(List<Long> parentIds, int categoryLevel);
+
+    String saveCategory(GoodsCategory goodsCategory);
+
+    String updateGoodsCategory(GoodsCategory goodsCategory);
+
+    Boolean deleteBatch(Long[] ids);
 }
