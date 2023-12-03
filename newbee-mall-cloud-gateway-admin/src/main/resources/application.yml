@@ -20,6 +20,16 @@ spring:
           order: 1
           predicates:
             - Path=/users/admin/**
+        - id: categories-admin-service-route
+          uri: lb://newbee-mall-cloud-goods-service
+          order: 1
+          predicates:
+            - Path=/categories/admin/**
+        - id: goods-admin-service-route
+          uri: lb://newbee-mall-cloud-goods-service
+          order: 1
+          predicates:
+            - Path=/goods/admin/**
   redis:
     database: 13
     host: 127.0.0.1

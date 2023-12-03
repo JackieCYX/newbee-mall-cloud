@@ -29,7 +29,7 @@ import java.util.Map;
 
 @RestController
 @Api(value = "v1", tags = "后台管理系统分类模块接口")
-@RequestMapping("/categories/admin")
+@RequestMapping("/goods/admin")
 public class NewBeeAdminGoodsInfoController {
 
     private static final Logger logger = LoggerFactory.getLogger(NewBeeAdminGoodsInfoController.class);

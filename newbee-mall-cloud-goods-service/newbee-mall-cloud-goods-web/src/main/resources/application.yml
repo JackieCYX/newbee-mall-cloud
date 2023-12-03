@@ -46,3 +46,16 @@ spring:
     timeout: 5000
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
+
+feign:
+  client:
+    config:
+      connectTimeout: 2000
+      readTimeout: 5000
+  compression:
+    request:
+      enabled: true
+      mime-types: text/xml,application/xml,application/json
+      min-request-size: 1024
+    response:
+      enabled: true
