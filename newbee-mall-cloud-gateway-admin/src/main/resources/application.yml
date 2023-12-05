@@ -30,6 +30,16 @@ spring:
           order: 1
           predicates:
             - Path=/goods/admin/**
+        - id: carousels-admin-service-route
+          uri: lb://newbee-mall-cloud-recommend-service
+          order: 1
+          predicates:
+            - Path=/carousels/admin/**
+        - id: indexConfigs-admin-service-route
+          uri: lb://newbee-mall-cloud-recommend-service
+          order: 1
+          predicates:
+            - Path=/indexConfigs/admin/**
   redis:
     database: 13
     host: 127.0.0.1
