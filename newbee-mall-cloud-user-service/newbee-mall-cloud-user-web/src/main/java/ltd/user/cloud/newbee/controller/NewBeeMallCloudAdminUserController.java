@@ -1,5 +1,7 @@
 package ltd.user.cloud.newbee.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import ltd.common.cloud.newbee.dto.Result;
 import ltd.common.cloud.newbee.dto.ResultGenerator;
 import ltd.user.cloud.newbee.config.annotation.TokenToAdminUser;
@@ -19,6 +21,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 
 @RestController
+@Api(value = "v1", tags = "新蜂商城管理员操作相关接口")
 public class NewBeeMallCloudAdminUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(NewBeeMallCloudAdminUserController.class);
@@ -26,29 +29,24 @@ public class NewBeeMallCloudAdminUserController {
     @Resource
     private AdminUserService adminUserService;
 
-    @GetMapping("/users/admin/test/{userId}")
-    public String test(@PathVariable("userId") int userId) {
-        String userName = "user:" + userId;
-        return userName;
-    }
-
-    @PostMapping("/users/admin/login")
+    @ApiOperation(value = "登录接口", notes = "返回token")
+    @RequestMapping(value = "/users/admin/login", method = RequestMethod.POST)
     public Result<String> login(@RequestBody @Valid AdminLoginParam adminLoginParam) {
-        String loginResult = adminUserService.login(adminLoginParam.getUserName(),
-                adminLoginParam.getPasswordMd5());
+        String loginResult = adminUserService.login(adminLoginParam.getUserName(), adminLoginParam.getPasswordMd5());
         logger.info("manage login api,adminName={},loginResult={}", adminLoginParam.getUserName(), loginResult);
 
-        // 登录成功
+        //登录成功
         if (!StringUtils.isEmpty(loginResult) && loginResult.length() == 32) {
             Result result = ResultGenerator.genSuccessResult();
             result.setData(loginResult);
             return result;
         }
-        // 登录失败
+        //登录失败
         return ResultGenerator.genFailResult(loginResult);
     }
 
-    @PostMapping("/users/admin/profile")
+    @ApiOperation(value = "获取管理员信息接口")
+    @RequestMapping(value = "/users/admin/profile", method = RequestMethod.POST)
     public Result profile(@TokenToAdminUser AdminUserToken adminUser) {
         logger.info("adminUser:{}", adminUser.toString());
         AdminUser adminUserEntity = adminUserService.getUserDetailById(adminUser.getAdminUserId());
@@ -61,9 +59,9 @@ public class NewBeeMallCloudAdminUserController {
         return ResultGenerator.genFailResult("无此用户数据");
     }
 
-    @PutMapping("/users/admin/password")
-    public Result passwordUpdate(@RequestBody @Valid UpdateAdminPasswordParam adminPasswordParam,
-                                 @TokenToAdminUser AdminUserToken adminUser) {
+    @ApiOperation(value = "修改管理员密码接口")
+    @RequestMapping(value = "/users/admin/password", method = RequestMethod.PUT)
+    public Result passwordUpdate(@RequestBody @Valid UpdateAdminPasswordParam adminPasswordParam, @TokenToAdminUser AdminUserToken adminUser) {
         logger.info("adminUser:{}", adminUser.toString());
         if (adminUserService.updatePassword(adminUser.getAdminUserId(), adminPasswordParam.getOriginalPassword(), adminPasswordParam.getNewPassword())) {
             return ResultGenerator.genSuccessResult();
@@ -72,9 +70,9 @@ public class NewBeeMallCloudAdminUserController {
         }
     }
 
-    @PutMapping("/users/admin/name")
-    public Result nameUpdate(@RequestBody @Valid UpdateAdminNameParam adminNameParam,
-                             @TokenToAdminUser AdminUserToken adminUser) {
+    @ApiOperation(value = "修改管理员信息接口")
+    @RequestMapping(value = "/users/admin/name", method = RequestMethod.PUT)
+    public Result nameUpdate(@RequestBody @Valid UpdateAdminNameParam adminNameParam, @TokenToAdminUser AdminUserToken adminUser) {
         logger.info("adminUser:{}", adminUser.toString());
         if (adminUserService.updateName(adminUser.getAdminUserId(), adminNameParam.getLoginUserName(), adminNameParam.getNickName())) {
             return ResultGenerator.genSuccessResult();
@@ -83,15 +81,17 @@ public class NewBeeMallCloudAdminUserController {
         }
     }
 
-    @DeleteMapping("/users/admin/logout")
+    @ApiOperation(value = "管理员退出登录的接口")
+    @RequestMapping(value = "/users/admin/logout", method = RequestMethod.DELETE)
     public Result logout(@TokenToAdminUser AdminUserToken adminUser) {
         logger.info("adminUser:{}", adminUser.toString());
         adminUserService.logout(adminUser.getToken());
         return ResultGenerator.genSuccessResult();
     }
 
-    @GetMapping("/users/admin/{token}")
-    public Result getAdminUserByToken(@PathVariable("token") String token) {
+    @ApiOperation(value = "根据token获取管理员信息的接口", notes = "OpenFeign调用")
+    @RequestMapping(value = "/users/admin/{token}", method = RequestMethod.GET)
+    public Result<AdminUser> getAdminUserByToken(@PathVariable("token") String token) {
         AdminUser adminUser = adminUserService.getUserDetailByToken(token);
         if (adminUser != null) {
             adminUser.setLoginPassword("******");

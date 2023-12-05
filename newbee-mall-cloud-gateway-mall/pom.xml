@@ -3,10 +3,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>ltd.newbee.cloud</groupId>
-    <artifactId>newbee-mall-cloud-gateway-admin</artifactId>
+    <artifactId>newbee-mall-cloud-gateway-mall</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>newbee-mall-cloud-gateway-admin</name>
-    <description>网关模块</description>
+    <name>newbee-mall-cloud-gateway-mall</name>
+    <description>商城端网关模块</description>
 
     <parent>
         <groupId>ltd.newbee.cloud</groupId>
@@ -51,6 +51,6 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
-    </dependencies>
 
+    </dependencies>
 </project>
