@@ -32,8 +32,12 @@ public class ValidMallUserTokenGlobalFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
-        // 登录注册接口，直接放行
-        if (exchange.getRequest().getURI().getPath().equals("/users/mall/login") || exchange.getRequest().getURI().getPath().equals("/users/mall/register")) {
+        String uri = exchange.getRequest().getURI().getPath();
+
+        // 登录、注册、首页接口，直接放行
+        if ("/users/mall/login".equals(uri) ||
+                "/users/mall/register".equals(uri) ||
+                "/mall/index/recommondInfos".equals(uri)) {
             return chain.filter(exchange);
         }
 
