@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import ltd.common.cloud.newbee.dto.Result;
 import ltd.common.cloud.newbee.dto.ResultGenerator;
 import ltd.common.cloud.newbee.pojo.AdminUserToken;
+import ltd.common.cloud.newbee.pojo.MallUserToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -23,7 +24,7 @@ import reactor.core.publisher.Mono;
 import java.nio.charset.StandardCharsets;
 
 @Component
-public class ValidTokenGlobalFilter implements GlobalFilter, Ordered {
+public class ValidMallUserTokenGlobalFilter implements GlobalFilter, Ordered {
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -31,8 +32,8 @@ public class ValidTokenGlobalFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
-        // 登录接口，直接放行
-        if (exchange.getRequest().getURI().getPath().equals("/users/admin/login")){
+        // 登录注册接口，直接放行
+        if (exchange.getRequest().getURI().getPath().equals("/users/mall/login") || exchange.getRequest().getURI().getPath().equals("/users/mall/register")) {
             return chain.filter(exchange);
         }
 
@@ -40,20 +41,20 @@ public class ValidTokenGlobalFilter implements GlobalFilter, Ordered {
 
         if (headers == null || headers.isEmpty()) {
             // 返回错误提示
-            return wrapErrorResponse(exchange,chain);
+            return wrapErrorResponse(exchange, chain);
         }
 
         String token = headers.getFirst("token");
 
         if (StringUtils.isEmpty(token)) {
             // 返回错误提示
-            return wrapErrorResponse(exchange,chain);
+            return wrapErrorResponse(exchange, chain);
         }
-        ValueOperations<String, AdminUserToken> opsForAdminUserToken = redisTemplate.opsForValue();
-        AdminUserToken tokenObject = opsForAdminUserToken.get(token);
+        ValueOperations<String, MallUserToken> opsForMallUserToken = redisTemplate.opsForValue();
+        MallUserToken tokenObject = opsForMallUserToken.get(token);
         if (tokenObject == null) {
             // 返回错误提示
-            return wrapErrorResponse(exchange,chain);
+            return wrapErrorResponse(exchange, chain);
         }
 
         return chain.filter(exchange);
@@ -65,7 +66,7 @@ public class ValidTokenGlobalFilter implements GlobalFilter, Ordered {
     }
 
     Mono<Void> wrapErrorResponse(ServerWebExchange exchange, GatewayFilterChain chain) {
-        Result result = ResultGenerator.genErrorResult(419, "无权限访问");
+        Result result = ResultGenerator.genErrorResult(416, "无权限访问");
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode resultNode = mapper.valueToTree(result);
         byte[] bytes = resultNode.toString().getBytes(StandardCharsets.UTF_8);
@@ -73,5 +74,4 @@ public class ValidTokenGlobalFilter implements GlobalFilter, Ordered {
         exchange.getResponse().setStatusCode(HttpStatus.OK);
         return exchange.getResponse().writeWith(Flux.just(dataBuffer));
     }
-
 }

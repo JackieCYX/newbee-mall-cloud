@@ -4,7 +4,7 @@ import ltd.common.cloud.newbee.dto.Result;
 import ltd.recommend.cloud.newbee.config.annotation.TokenToAdminUser;
 import ltd.common.cloud.newbee.exception.NewBeeMallException;
 import ltd.recommend.cloud.newbee.entity.LoginAdminUser;
-import ltd.user.cloud.newbee.openfeign.NewBeeCloudAdminUserServiceFeign;
+import ltd.user.cloud.newbee.openfeign.NewBeeCloudUserServiceFeign;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ import java.util.LinkedHashMap;
 public class TokenToAdminUserMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Autowired
-    private NewBeeCloudAdminUserServiceFeign newBeeCloudAdminUserService;
+    private NewBeeCloudUserServiceFeign newBeeCloudAdminUserService;
     public TokenToAdminUserMethodArgumentResolver() {
     }
 

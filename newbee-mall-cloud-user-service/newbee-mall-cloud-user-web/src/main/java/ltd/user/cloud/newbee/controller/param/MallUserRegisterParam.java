@@ -7,16 +7,16 @@ import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
 /**
- * 用户登录param
+ * 用户注册param
  */
 @Data
-public class MallUserLoginParam implements Serializable {
+public class MallUserRegisterParam implements Serializable {
 
     @ApiModelProperty("登录名")
     @NotEmpty(message = "登录名不能为空")
     private String loginName;
 
-    @ApiModelProperty("用户密码(需要MD5加密)")
+    @ApiModelProperty("用户密码")
     @NotEmpty(message = "密码不能为空")
-    private String passwordMd5;
+    private String password;
 }
