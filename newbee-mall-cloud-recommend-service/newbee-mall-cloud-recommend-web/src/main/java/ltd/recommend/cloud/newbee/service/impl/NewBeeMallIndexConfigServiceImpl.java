@@ -4,6 +4,7 @@ import ltd.common.cloud.newbee.enums.ServiceResultEnum;
 import ltd.common.cloud.newbee.dto.PageQueryUtil;
 import ltd.common.cloud.newbee.dto.PageResult;
 import ltd.common.cloud.newbee.dto.Result;
+import ltd.common.cloud.newbee.util.BeanUtil;
 import ltd.goods.cloud.newbee.dto.NewBeeMallGoodsDTO;
 import ltd.goods.cloud.newbee.openfeign.NewBeeCloudGoodsServiceFeign;
 import ltd.recommend.cloud.newbee.controller.vo.NewBeeMallIndexConfigGoodsVO;
@@ -96,6 +97,26 @@ public class NewBeeMallIndexConfigServiceImpl implements NewBeeMallIndexConfigSe
             List<Long> goodsIds = indexConfigs.stream().map(IndexConfig::getGoodsId).collect(Collectors.toList());
             // 调用商品微服务来获取商品的数据
             Result<List<NewBeeMallGoodsDTO>> newBeeMallGoodsDTOResult = goodsService.listByGoodsIds(goodsIds);
+            if (newBeeMallGoodsDTOResult == null || newBeeMallGoodsDTOResult.getResultCode() != 200 ||
+                    CollectionUtils.isEmpty(newBeeMallGoodsDTOResult.getData())) {
+                // 未查询到数据 返回空链表（也可以直接在这里丢出异常）
+                return newBeeMallIndexConfigGoodsVOS;
+            }
+            newBeeMallIndexConfigGoodsVOS = BeanUtil.copyList(newBeeMallGoodsDTOResult.getData(), NewBeeMallIndexConfigGoodsVO.class);
+            for (NewBeeMallIndexConfigGoodsVO newBeeMallIndexConfigGoodsVO : newBeeMallIndexConfigGoodsVOS) {
+                String goodsName = newBeeMallIndexConfigGoodsVO.getGoodsName();
+                String goodsIntro = newBeeMallIndexConfigGoodsVO.getGoodsIntro();
+                // 字符串过长导致文字超出的问题
+                if (goodsName.length() > 30) {
+                    goodsName = goodsName.substring(0, 30) + "...";
+                    newBeeMallIndexConfigGoodsVO.setGoodsName(goodsName);
+                }
+                if (goodsIntro.length() > 22) {
+                    goodsIntro = goodsIntro.substring(0, 22) + "...";
+                    newBeeMallIndexConfigGoodsVO.setGoodsIntro(goodsIntro);
+                }
+            }
         }
+        return newBeeMallIndexConfigGoodsVOS;
     }
 }
