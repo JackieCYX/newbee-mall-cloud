@@ -16,6 +16,7 @@
         <module>newbee-mall-cloud-gateway-admin</module>
         <module>newbee-mall-cloud-gateway-mall</module>
         <module>newbee-mall-cloud-common</module>
+        <module>newbee-mall-cloud-shop-cart-service</module>
     </modules>
 
     <properties>
