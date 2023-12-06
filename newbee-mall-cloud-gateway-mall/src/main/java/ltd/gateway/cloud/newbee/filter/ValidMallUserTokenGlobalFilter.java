@@ -22,6 +22,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class ValidMallUserTokenGlobalFilter implements GlobalFilter, Ordered {
@@ -32,12 +34,14 @@ public class ValidMallUserTokenGlobalFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
-        String uri = exchange.getRequest().getURI().getPath();
+        final List<String> ignoreURLs = new ArrayList<>();
+        ignoreURLs.add("/users/mall/login");
+        ignoreURLs.add("/users/mall/register");
+        ignoreURLs.add("/categories/mall/listAll");
+        ignoreURLs.add("/mall/index/recommondInfos");
 
-        // 登录、注册、首页接口，直接放行
-        if ("/users/mall/login".equals(uri) ||
-                "/users/mall/register".equals(uri) ||
-                "/mall/index/recommondInfos".equals(uri)) {
+        // 登录、注册、首页、分类接口，直接放行
+        if (ignoreURLs.contains(exchange.getRequest().getURI().getPath())) {
             return chain.filter(exchange);
         }
 

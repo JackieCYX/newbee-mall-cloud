@@ -25,6 +25,11 @@ spring:
           order: 1
           predicates:
             - Path=/mall/index/**
+        - id: goods-service-route
+          uri: lb://newbee-mall-cloud-goods-service
+          order: 1
+          predicates:
+            - Path=/categories/mall/**
   redis:
     database: 13
     host: 127.0.0.1

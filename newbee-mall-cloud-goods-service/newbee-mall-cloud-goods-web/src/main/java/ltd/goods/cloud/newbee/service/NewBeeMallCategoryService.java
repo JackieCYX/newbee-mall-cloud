@@ -2,6 +2,7 @@ package ltd.goods.cloud.newbee.service;
 
 import ltd.common.cloud.newbee.dto.PageQueryUtil;
 import ltd.common.cloud.newbee.dto.PageResult;
+import ltd.goods.cloud.newbee.controller.vo.NewBeeMallIndexCategoryVO;
 import ltd.goods.cloud.newbee.entity.GoodsCategory;
 
 import java.util.List;
@@ -32,4 +33,11 @@ public interface NewBeeMallCategoryService {
     String updateGoodsCategory(GoodsCategory goodsCategory);
 
     Boolean deleteBatch(Long[] ids);
+
+    /**
+     * 返回分类数据(首页调用)
+     *
+     * @return
+     */
+    List<NewBeeMallIndexCategoryVO> getCategoriesForIndex();
 }
