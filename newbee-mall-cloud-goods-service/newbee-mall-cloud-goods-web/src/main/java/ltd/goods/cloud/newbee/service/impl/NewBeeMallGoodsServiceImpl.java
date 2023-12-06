@@ -92,4 +92,9 @@ public class NewBeeMallGoodsServiceImpl implements NewBeeMallGoodsService {
             goodsMapper.batchInsert(newBeeMallGoodsList);
         }
     }
+
+    @Override
+    public List<NewBeeMallGoods> getNewBeeMallGoodsByIds(List<Long> goodsIds) {
+        return goodsMapper.selectByPrimaryKeys(goodsIds);
+    }
 }

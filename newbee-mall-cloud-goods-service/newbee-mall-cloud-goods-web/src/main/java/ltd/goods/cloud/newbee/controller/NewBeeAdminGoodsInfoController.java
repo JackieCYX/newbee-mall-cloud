@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -142,4 +143,11 @@ public class NewBeeAdminGoodsInfoController {
         return ResultGenerator.genSuccessResult(goods);
     }
 
+
+    @GetMapping("/listByGoodsIds")
+    @ApiOperation(value = "根据ids查询商品列表", notes = "根据ids查询")
+    public Result getNewBeeMallGoodsByIds(@RequestParam("goodsIds") List<Long> goodsIds) {
+        List<NewBeeMallGoods> newBeeMallGoods = newBeeMallGoodsService.getNewBeeMallGoodsByIds(goodsIds);
+        return ResultGenerator.genSuccessResult(newBeeMallGoods);
+    }
 }

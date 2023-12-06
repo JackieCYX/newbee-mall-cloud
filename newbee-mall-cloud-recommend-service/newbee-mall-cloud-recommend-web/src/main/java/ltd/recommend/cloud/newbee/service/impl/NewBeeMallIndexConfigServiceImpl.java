@@ -6,14 +6,18 @@ import ltd.common.cloud.newbee.dto.PageResult;
 import ltd.common.cloud.newbee.dto.Result;
 import ltd.goods.cloud.newbee.dto.NewBeeMallGoodsDTO;
 import ltd.goods.cloud.newbee.openfeign.NewBeeCloudGoodsServiceFeign;
+import ltd.recommend.cloud.newbee.controller.vo.NewBeeMallIndexConfigGoodsVO;
 import ltd.recommend.cloud.newbee.dao.IndexConfigMapper;
 import ltd.recommend.cloud.newbee.entity.IndexConfig;
 import ltd.recommend.cloud.newbee.service.NewBeeMallIndexConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class NewBeeMallIndexConfigServiceImpl implements NewBeeMallIndexConfigService {
@@ -81,5 +85,17 @@ public class NewBeeMallIndexConfigServiceImpl implements NewBeeMallIndexConfigSe
         }
         //删除数据
         return indexConfigMapper.deleteBatch(ids) > 0;
+    }
+
+    @Override
+    public List<NewBeeMallIndexConfigGoodsVO> getConfigGoodsesForIndex(int configType, int number) {
+        List<NewBeeMallIndexConfigGoodsVO> newBeeMallIndexConfigGoodsVOS = new ArrayList<>(number);
+        List<IndexConfig> indexConfigs = indexConfigMapper.findIndexConfigsByTypeAndNum(configType, number);
+        if (!CollectionUtils.isEmpty(indexConfigs)) {
+            // 取出所有goodsId
+            List<Long> goodsIds = indexConfigs.stream().map(IndexConfig::getGoodsId).collect(Collectors.toList());
+            // 调用商品微服务来获取商品的数据
+            Result<List<NewBeeMallGoodsDTO>> newBeeMallGoodsDTOResult = goodsService.listByGoodsIds(goodsIds);
+        }
     }
 }

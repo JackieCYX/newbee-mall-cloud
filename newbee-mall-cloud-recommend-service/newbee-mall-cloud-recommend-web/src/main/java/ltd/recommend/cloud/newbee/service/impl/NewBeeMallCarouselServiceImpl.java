@@ -3,12 +3,17 @@ package ltd.recommend.cloud.newbee.service.impl;
 import ltd.common.cloud.newbee.dto.PageQueryUtil;
 import ltd.common.cloud.newbee.dto.PageResult;
 import ltd.common.cloud.newbee.enums.ServiceResultEnum;
+import ltd.common.cloud.newbee.util.BeanUtil;
+import ltd.goods.cloud.newbee.openfeign.NewBeeCloudGoodsServiceFeign;
+import ltd.recommend.cloud.newbee.controller.vo.NewBeeMallIndexCarouselVO;
 import ltd.recommend.cloud.newbee.dao.CarouselMapper;
 import ltd.recommend.cloud.newbee.entity.Carousel;
 import ltd.recommend.cloud.newbee.service.NewBeeMallCarouselService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -63,5 +68,16 @@ public class NewBeeMallCarouselServiceImpl implements NewBeeMallCarouselService 
         }
         //删除数据
         return carouselMapper.deleteBatch(ids) > 0;
+    }
+
+    @Override
+    public List<NewBeeMallIndexCarouselVO> getCarouselsForIndex(int number) {
+        List<NewBeeMallIndexCarouselVO> newBeeMallIndexCarouselVOS = new ArrayList<>(number);
+        List<Carousel> carousels = carouselMapper.findCarouselsByNum(number);
+        if (!CollectionUtils.isEmpty(carousels)) {
+            newBeeMallIndexCarouselVOS = BeanUtil.copyList(carousels, NewBeeMallIndexCarouselVO.class);
+        }
+        return newBeeMallIndexCarouselVOS;
+
     }
 }

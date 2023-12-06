@@ -54,4 +54,12 @@ public interface NewBeeMallGoodsService {
      * @return
      */
     void batchSaveNewBeeMallGoods(List<NewBeeMallGoods> newBeeMallGoodsList);
+
+    /**
+     * 获取商品数据
+     *
+     * @param goodsIds
+     * @return
+     */
+    List<NewBeeMallGoods> getNewBeeMallGoodsByIds(List<Long> goodsIds);
 }
