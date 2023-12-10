@@ -15,21 +15,36 @@ spring:
           enabled: true
           lower-case-service-id: true
       routes:
+        # 用户服务的路由配置
         - id: user-service-route
           uri: lb://newbee-mall-cloud-user-service
           order: 1
           predicates:
             - Path=/users/mall/**
+        # 首页接口的路由配置
         - id: recommend-service-route
           uri: lb://newbee-mall-cloud-recommend-service
           order: 1
           predicates:
             - Path=/mall/index/**
+        # 分类接口饿路由配置
         - id: goods-service-route
           uri: lb://newbee-mall-cloud-goods-service
           order: 1
           predicates:
             - Path=/categories/mall/**
+        # 商品接口的路由配置
+        - id: goods-service-route2
+          uri: lb://newbee-mall-cloud-goods-service
+          order: 1
+          predicates:
+            - Path=/goods/mall/**
+        # 购物车接口的路由配置
+        - id: shop-cart-service-route
+          uri: lb://newbee-mall-cloud-shop-cart-service
+          order: 1
+          predicates:
+            - Path=/shop-cart/**
   redis:
     database: 13
     host: 127.0.0.1
